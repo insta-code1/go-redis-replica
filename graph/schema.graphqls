@@ -1,0 +1,33 @@
+input NewDeployment {
+  name: String!
+  image: String!
+}
+input UpdateDeployment {
+  name: String!
+  image: String!
+}
+
+input NewService {
+  name: String!
+}
+
+input DeleteDeployment {
+  name: String!
+}
+
+type Message {
+  text: String! 
+}
+
+type Mutation {
+  createRedisMasterDeployment(input: NewDeployment!): Message!
+  createRedisMasterService(input: NewService!): Message!
+  createRedisSlaveDeployment(input: NewDeployment!): Message!
+  createRedisSlaveService(input: NewService!): Message!
+  updateDeployment(input: UpdateDeployment!): Message! 
+  deleteDeployment(input: DeleteDeployment!): Message! 
+}
+  
+type Query {
+  listDeployments: [Message!]!  
+}

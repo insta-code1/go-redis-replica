@@ -10,7 +10,7 @@ import (
 )
 
 // CreateDeployment creates a deployment
-func (s *Service) CreateDeployment(deployment *appsv1.Deployment) {
+func (s *Service) CreateDeployment(deployment *appsv1.Deployment) string {
 	fmt.Println("Creating deployment...")
 	deploymentsClient := s.Dao.ClientSet.AppsV1().Deployments(apiv1.NamespaceDefault)
 	result, err := deploymentsClient.Create(context.TODO(), deployment, metav1.CreateOptions{})
@@ -18,15 +18,16 @@ func (s *Service) CreateDeployment(deployment *appsv1.Deployment) {
 		panic(err)
 	}
 	fmt.Printf("Created deployment %q.\n", result.GetObjectMeta().GetName())
+	return result.GetObjectMeta().GetName()
 }
 
 // CreateService creats a service
-func (s *Service) CreateService(service *apiv1.Service) {
-	// deploymentsClient := s.Dao.ClientSet.AppsV1().Ser(apiv1.NamespaceDefault)
+func (s *Service) CreateService(service *apiv1.Service) string {
 	serviceClient := s.Dao.ClientSet.CoreV1().Services(apiv1.NamespaceDefault)
 	result, err := serviceClient.Create(context.TODO(), service, metav1.CreateOptions{})
 	if err != nil {
 		panic(err)
 	}
 	fmt.Printf("Created service %q.\n", result.GetObjectMeta().GetName())
+	return result.GetObjectMeta().GetName()
 }

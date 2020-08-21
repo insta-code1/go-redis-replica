@@ -9,14 +9,17 @@ import (
 )
 
 // ListDeployments list deployments
-func (s *Service) ListDeployments() {
+func (s *Service) ListDeployments() ([]string, error) {
+	deploymentList := []string{}
 	deploymentsClient := s.Dao.ClientSet.AppsV1().Deployments(apiv1.NamespaceDefault)
-	fmt.Printf("Listing deployments in namespace %q:\n", apiv1.NamespaceDefault)
 	list, err := deploymentsClient.List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		panic(err)
+		return deploymentList, err
 	}
 	for _, d := range list.Items {
-		fmt.Printf(" * %s (%d replicas)\n", d.Name, *d.Spec.Replicas)
+		msg := fmt.Sprintf("Deployment * %s (%d replicas)\n", d.Name, *d.Spec.Replicas)
+		fmt.Println(msg)
+		deploymentList = append(deploymentList, msg)
 	}
+	return deploymentList, nil
 }

@@ -9,14 +9,14 @@ import (
 )
 
 // DeleteDeployment deletes the specified deployment.
-func (s *Service) DeleteDeployment() {
+func (s *Service) DeleteDeployment(deploymentName string) (string, error) {
 	fmt.Println("Deleting deployment...")
 	deploymentsClient := s.Dao.ClientSet.AppsV1().Deployments(apiv1.NamespaceDefault)
 	deletePolicy := metav1.DeletePropagationForeground
-	if err := deploymentsClient.Delete(context.TODO(), "demo-deployment", metav1.DeleteOptions{
+	if err := deploymentsClient.Delete(context.TODO(), deploymentName, metav1.DeleteOptions{
 		PropagationPolicy: &deletePolicy,
 	}); err != nil {
-		panic(err)
+		return "", fmt.Errorf("Delete failed: %v", err)
 	}
-	fmt.Println("Deleted deployment.")
+	return fmt.Sprint("Deleted deployment."), nil
 }
